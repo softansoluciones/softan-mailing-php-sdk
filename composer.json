@@ -1,6 +1,6 @@
 {
   "name": "softan/mailing-php-sdk",
-  "description": "SDK PHP para Softan Mailing — templates, accounts y envio de correos",
+  "description": "SDK PHP para Softan Mailing — envio de correos por plantilla",
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/softansoluciones/softan-mailing-php-sdk",
@@ -34,7 +34,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-main": "0.1.x-dev"
+      "dev-main": "0.2.x-dev"
     }
   }
 }
