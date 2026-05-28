@@ -3,24 +3,19 @@
   "sdk_version": "0.1.0",
   "sdk_type": "php",
   "sdk_author": "Softan Soluciones",
-  "default_environment": "prod",
+  "app_id": "SOM-096",
+  "default_environment": "stg",
   "base_urls": {
-    "dev":  "http://localhost/softan-mailing/main-api-v2/public/",
-    "stg":  "",
-    "prod": ""
+    "stg":  "https://mailing-stg.softansoluciones.com/",
+    "prod": "https://mailing.softansoluciones.com/"
+  },
+  "credentials": {
+    "stg":  { "api_key": "RwJXFgZaSEJRW0wCBAUAF1MCQVdbTEJSXBoAAlZRFwQCTQYLH0RXCRtQA1QEQghXEldcGEdQWExXAwcCRARfFg==" },
+    "prod": { "api_key": "RwVVQQFfTkAGDh8HAgZWRQVRRgFaHkFRWB8CBFMNQgBQEgNdTEQGXBkLBwUEQgMCTQENThdTDk5TBAFQQAcDRw==" }
   },
   "endpoints": {
-    "templates": {
-      "base": "templates",
-      "show": "templates/show"
-    },
-    "accounts": {
-      "base": "accounts",
-      "show": "accounts/show"
-    },
     "manager": {
-      "send_by_template": "manager/send-by-template",
-      "create_instance":  "manager/create-instance"
+      "send_by_template": "manager/send-by-template"
     }
   }
 }

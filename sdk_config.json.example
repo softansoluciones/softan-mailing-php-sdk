@@ -1,14 +1,3 @@
 {
-  "active_environment": "prod",
-  "environments": {
-    "dev": {
-      "api_key": ""
-    },
-    "stg": {
-      "api_key": ""
-    },
-    "prod": {
-      "api_key": ""
-    }
-  }
+  "active_environment": "stg"
 }
