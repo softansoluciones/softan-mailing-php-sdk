@@ -1,0 +1,26 @@
+{
+  "sdk_name": "Softan Mailing SDK",
+  "sdk_version": "0.1.0",
+  "sdk_type": "php",
+  "sdk_author": "Softan Soluciones",
+  "default_environment": "prod",
+  "base_urls": {
+    "dev":  "http://localhost/softan-mailing/main-api-v2/public/",
+    "stg":  "",
+    "prod": ""
+  },
+  "endpoints": {
+    "templates": {
+      "base": "templates",
+      "show": "templates/show"
+    },
+    "accounts": {
+      "base": "accounts",
+      "show": "accounts/show"
+    },
+    "manager": {
+      "send_by_template": "manager/send-by-template",
+      "create_instance":  "manager/create-instance"
+    }
+  }
+}
