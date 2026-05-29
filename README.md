@@ -101,6 +101,21 @@ En `stg`, todos los correos son redirigidos al destinatario sandbox configurado 
 
 ### Cambiar el entorno activo
 
+**Opción 1 — CLI (recomendado para configuración persistente):**
+
+```bash
+# Interactivo
+php vendor/bin/mailing-set-env.php
+
+# No interactivo
+php vendor/bin/mailing-set-env.php --env=prod
+php vendor/bin/mailing-set-env.php --env=stg
+```
+
+Crea o actualiza `sdk_config.json` con el entorno seleccionado. Ese archivo persiste entre requests hasta que se vuelva a ejecutar el script.
+
+**Opción 2 — Programática (recomendado para proyectos con entorno fijo en código):**
+
 El SDK usa inicialización lazy: si el proyecto pre-configura `SDK::$META` y `SDK::$CONFIG` antes de la primera llamada a un servicio, esos valores se usan durante todo el ciclo de vida de la request.
 
 ```php
