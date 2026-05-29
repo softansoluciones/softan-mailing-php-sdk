@@ -6,7 +6,11 @@
 
 ## Descripción
 
-SDK oficial para integrar aplicaciones con Softan Mailing en PHP. Expone métodos estáticos de alto nivel para gestionar templates, cuentas SMTP y envío de correos mediante plantillas.
+SDK oficial para integrar aplicaciones con Softan Mailing en PHP. Expone un método estático de alto nivel para enviar correos electrónicos mediante plantillas existentes.
+
+Las credenciales de acceso a la API están embebidas en el SDK (`sdk_meta.json`). No se requiere ninguna configuración manual de API keys.
+
+> **Nota:** La gestión de templates, cuentas SMTP e instancias se realiza a través del módulo Softan Mailing Module v2 o directamente desde el board de administración. Este SDK está diseñado exclusivamente para el envío de correos desde aplicaciones cliente.
 
 ## Requisitos
 
@@ -17,14 +21,10 @@ SDK oficial para integrar aplicaciones con Softan Mailing en PHP. Expone método
 ## Instalación
 
 ```bash
-composer require softan/mailing-php-sdk:^0.1.0
+composer require softan/mailing-php-sdk:^0.2.0
 ```
 
-Luego inicializa la configuración con tu API key:
-
-```bash
-php vendor/bin/install.php
-```
+Listo. No se necesita ningún paso adicional — las credenciales están embebidas.
 
 ### Alternativa: instalación desde GitHub (VCS)
 
@@ -57,132 +57,79 @@ var_dump($result);
 
 ## Uso en código
 
-### Templates
+### Enviar correo por plantilla
 
 ```php
 use SoftanMailing\Services;
 
-// Listar todos los templates
-$list = Services::listTemplates();
-
-// Ver un template por ID
-$template = Services::showTemplate(42);
-
-// Crear un template
-$created = Services::createTemplate([
-    'template_html'        => '<h1>Hola {{name}}</h1>',
-    'template_name'        => 'Bienvenida',
-    'template_description' => 'Correo de bienvenida',
-    'template_subject'     => 'Bienvenido a nuestra plataforma',
-    'template_params'      => 'name',
-    'app_id'               => 'SOM-XXXX',
-    'account_identifier'   => 'acc_xxxxxxxxxxxx',
-]);
-
-// Actualizar un template
-$updated = Services::updateTemplate(42, [
-    'template_html'        => '<h1>Hola {{name}}, código: {{code}}</h1>',
-    'template_name'        => 'Bienvenida v2',
-    'template_description' => 'Correo de bienvenida actualizado',
-    'template_subject'     => 'Bienvenido',
-    'template_params'      => 'name,code',
-    'app_id'               => 'SOM-XXXX',
-    'account_identifier'   => 'acc_xxxxxxxxxxxx',
-]);
-
-// Eliminar un template
-$deleted = Services::deleteTemplate(42);
-```
-
-### Accounts (cuentas SMTP)
-
-```php
-// Listar cuentas
-$accounts = Services::listAccounts();
-
-// Ver una cuenta
-$account = Services::showAccount(5);
-
-// Crear cuenta SMTP
-$created = Services::createAccount([
-    'account_email'    => 'noreply@miempresa.com',
-    'account_name'     => 'Mi Empresa',
-    'account_host'     => 'smtp.miempresa.com',
-    'account_port'     => 587,
-    'account_password' => 'password123',
-    'user_id'          => 1,
-]);
-
-// Actualizar cuenta
-$updated = Services::updateAccount(5, [
-    'account_email'    => 'noreply@miempresa.com',
-    'account_name'     => 'Mi Empresa (actualizado)',
-    'account_host'     => 'smtp.miempresa.com',
-    'account_port'     => 465,
-    'account_password' => 'nuevapassword',
-    'user_id'          => 1,
-]);
-
-// Eliminar cuenta
-$deleted = Services::deleteAccount(5);
-```
-
-### Manager
-
-```php
-// Enviar correo por plantilla
-$sent = Services::sendByTemplate([
-    'template_key'    => 'tpl_1234567890_ab12',
+$result = Services::sendByTemplate([
+    'template_key'    => 'tpl_1234567890_ab12',  // Clave del template (tpl_...)
     'recipient_email' => 'usuario@example.com',
     'recipient_name'  => 'Juan Pérez',
-    'email_params'    => ['name' => 'Juan', 'code' => '998877'],
-]);
-
-// Crear cuenta + template en un solo paso
-$instance = Services::createInstance([
-    'account_email'        => 'noreply@miempresa.com',
-    'account_name'         => 'Mi Empresa',
-    'account_host'         => 'smtp.miempresa.com',
-    'account_port'         => 587,
-    'account_password'     => 'password123',
-    'template_html'        => '<h1>Hola {{name}}</h1>',
-    'template_name'        => 'Bienvenida',
-    'template_description' => 'Correo de bienvenida',
-    'template_subject'     => 'Bienvenido',
-    'template_params'      => 'name',
-    'app_id'               => 'SOM-XXXX',
-    'user_id'              => 1,
+    'email_params'    => [                         // Mapa clave-valor con los parámetros del template
+        'name' => 'Juan',
+        'code' => '998877',
+    ],
 ]);
 ```
 
-## Configuración
+**Campos requeridos:**
 
-La configuración se gestiona en `sdk_config.json` (creado por `bin/install.php`, **no versionar**).
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `template_key` | string | Clave del template (`tpl_...`) |
+| `recipient_email` | string | Correo del destinatario |
+| `recipient_name` | string | Nombre del destinatario |
+| `email_params` | array | Parámetros del template (mapa clave-valor) |
 
-Estructura:
+**Respuesta exitosa:**
 
 ```json
 {
-  "active_environment": "prod",
-  "environments": {
-    "dev":  { "api_key": "" },
-    "stg":  { "api_key": "" },
-    "prod": { "api_key": "" }
-  }
+  "success": true,
+  "code": "common.ok",
+  "message": "Email sent successfully.",
+  "data": {}
 }
 ```
 
-Copia `sdk_config.json.example` como punto de partida si prefieres configurarlo manualmente.
+## Entornos
 
-## CLI
+El SDK incluye credenciales para `stg` y `prod`. El entorno por defecto es `stg`.
 
-```bash
-# Instalador interactivo (crea sdk_config.json)
-php vendor/bin/install.php
+En `stg`, todos los correos son redirigidos al destinatario sandbox configurado en el servidor (SMTP sandbox). En `prod`, los correos se envían al destinatario real.
 
-# Modo no interactivo
-php vendor/bin/install.php --api-key="TU_API_KEY" --env=prod
+### Cambiar el entorno activo
+
+El SDK usa inicialización lazy: si el proyecto pre-configura `SDK::$META` y `SDK::$CONFIG` antes de la primera llamada a un servicio, esos valores se usan durante todo el ciclo de vida de la request.
+
+```php
+use SoftanMailing\SDK;
+use SoftanMailing\Services;
+
+// Forzar entorno prod (llamar antes del primer Services::*)
+SDK::$META   = SDK::loadJson(SDK::META_PATH);
+SDK::$CONFIG = ['active_environment' => 'prod'];
+
+// Todas las llamadas siguientes usarán prod
+$result = Services::sendByTemplate([...]);
 ```
+
+Si no se realiza ninguna inicialización previa, el SDK usa `stg` como entorno por defecto (definido en `sdk_meta.json`).
+
+## Configuración
+
+Las credenciales de API están embebidas en `sdk_meta.json` (XOR+base64). No es necesario ni recomendable crear un `sdk_config.json` con credenciales.
+
+El único uso válido de `sdk_config.json` es sobrescribir el entorno activo cuando se prefiere configuración en archivo en lugar de código:
+
+```json
+{
+  "active_environment": "prod"
+}
+```
+
+`sdk_config.json` debe ir en `.gitignore` si se crea. No está incluido en el repositorio del SDK.
 
 ## TLS
 
@@ -196,6 +143,15 @@ Services::sendByTemplate($payload, null, false);  // tercer parámetro: $verifyT
 
 - PHP: 8.1+
 - Sistemas: Windows, Linux, macOS
+
+## Desarrollo
+
+```bash
+composer install
+composer test
+```
+
+CI: el workflow en `.github/workflows/ci.yml` valida Composer e integra PHPUnit en PHP 8.1/8.2/8.3.
 
 ## Licencia
 
