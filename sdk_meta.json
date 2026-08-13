@@ -6,8 +6,8 @@
   "app_id": "SOM-096",
   "default_environment": "stg",
   "base_urls": {
-    "stg":  "https://mailing-stg.softansoluciones.com/",
-    "prod": "https://mailing.softansoluciones.com/"
+    "stg":  "https://mailing-stg.softansoluciones.com/public/",
+    "prod": "https://mailing.softansoluciones.com/public/"
   },
   "credentials": {
     "stg":  { "api_key": "RwJXFgZaSEJRW0wCBAUAF1MCQVdbTEJSXBoAAlZRFwQCTQYLH0RXCRtQA1QEQghXEldcGEdQWExXAwcCRARfFg==" },
